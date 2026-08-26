@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia da Hipermetropia</title>
+    <style>
+        :root {
+            /* Degradê principal (Laranja para Salmão) */
+            --gradient-primary: linear-gradient(135deg, #ff8c00 0%, #fa8072 100%);
+            --gradient-hover: linear-gradient(135deg, #e67e00 0%, #e87265 100%);
+            
+            /* Cores Modo Claro (Padrão) */
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #eaeaea;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            --sim-bg: #e0f7fa;
+            --sim-ground: #c8e6c9;
+        }
+
+        body.dark-mode {
+            /* Cores Modo Escuro */
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f5f5f5;
+            --text-muted: #b0b0b0;
+            --border-color: #333;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            --sim-bg: #0b2e3f;
+            --sim-ground: #1b3a20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transition: background-color 0.4s ease;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .card-header {
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: background-color 0.3s;
+        }
+
+        .card-header:hover {
+            background-color: rgba(255, 140, 0, 0.05);
+        }
+
+        .card-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-indicator {
+            font-size: 1.5rem;
+            color: #ff8c00;
+            transition: transform 0.4s ease;
+        }
+
+        .card.active .icon-indicator {
+            transform: rotate(45deg);
+        }
+
+        .card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 25px;
+            color: var(--text-muted);
+        }
+
+        .card.active .card-body {
+            padding: 0 25px 25px 25px;
+        }
+
+        .card-body p {
+            margin-bottom: 15px;
+        }
+
+        .card-body ul {
+            list-style-type: none;
+            margin-left: 10px;
+        }
+
+        .card-body ul li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .card-body ul li::before {
+            content: '🔸';
+            position: absolute;
+            left: 0;
+            font-size: 0.9rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .svg-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(255, 140, 0, 0.03);
+            border-radius: 15px;
+            border: 1px dashed rgba(255, 140, 0, 0.3);
+        }
+
+        .svg-text {
+            fill: var(--text-main);
+            font-family: inherit;
+        }
+
+        .svg-stroke {
+            stroke: var(--text-main);
+        }
+
+        .highlight-box {
+            background-color: rgba(255, 140, 0, 0.1);
+            border-left: 4px solid #ff8c00;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+
+        .simulation-section {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            transition: background-color 0.4s ease;
+        }
+
+        .simulation-section h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        /* Checkbox invisível */
+        #sim-toggle { display: none; }
+
+        .sim-btn {
+            display: inline-block;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .sim-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.5);
+        }
+
+        .sim-view {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: linear-gradient(to bottom, var(--sim-bg) 50%, var(--sim-ground) 50%);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            margin-top: 20px;
+            transition: background 0.4s;
+        }
+
+        .object {
+            position: absolute;
+            transition: filter 0.8s ease, transform 0.8s ease;
+        }
+
+        .far-object {
+            top: 30px;
+            right: 50px;
+            font-size: 4rem;
+        }
+
+        .close-object {
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px 15px 0 0;
+            width: 85%;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.3);
+            text-align: left;
+            border-top: 5px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .close-object::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: 0; right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+            border-radius: 15px 15px 0 0;
+        }
+
+        .close-object h3 {
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .close-object p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Lógica do CSS da Simulação */
+        #sim-toggle:checked ~ .sim-view .close-object {
+            filter: blur(8px);
+        }
+
+        #sim-toggle:checked ~ .sim-view .far-object {
+            filter: blur(0px);
+            transform: scale(1.1);
+        }
+
+        .sim-status { font-weight: bold; font-size: 1.1rem; }
+
+        #sim-toggle:checked ~ .sim-status::after {
+            content: " LIGADA (Visão de Perto Embaçada)";
+            color: #ff7474;
+        }
+
+        #sim-toggle:not(:checked) ~ .sim-status::after {
+            content: " DESLIGADA (Visão Normal)";
+            color: #4CAF50;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; gap: 20px; }
+            .card-header h2 { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Guia da Hipermetropia 👓</h1>
+                <p>Clique nos tópicos abaixo para explorar os detalhes da condição.</p>
+            </div>
+            <button class="theme-toggle" id="themeBtn" aria-label="Alternar Tema">
+                <span id="themeIcon">🌙</span> Escuro
+            </button>
+        </header>
+
+        <div class="grid">
+            
+            <!-- Card 1 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>O que é a Hipermetropia?</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <p>A hipermetropia é um erro refrativo comum em que o olho humano é anatomicamente um pouco <strong>mais curto</strong> do que o normal, ou a córnea (a lente frontal do olho) é mais plana do que deveria ser.</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 300 150" width="100%" height="180px" style="max-width: 400px;">
+                            <defs>
+                                <linearGradient id="lensGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ff8c00;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#fa8072;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Globo ocular -->
+                            <ellipse cx="120" cy="75" rx="60" ry="50" fill="transparent" class="svg-stroke" stroke-width="3"/>
+                            <!-- Córnea -->
+                            <path d="M 65 50 Q 40 75 65 100" fill="transparent" class="svg-stroke" stroke-width="3"/>
+                            <!-- Cristalino (Lente) -->
+                            <ellipse cx="75" cy="75" rx="8" ry="20" fill="url(#lensGrad)"/>
+                            <!-- Raios de luz entrando -->
+                            <line x1="10" y1="30" x2="70" y2="60" stroke="#ff8c00" stroke-width="2"/>
+                            <line x1="10" y1="120" x2="70" y2="90" stroke="#ff8c00" stroke-width="2"/>
+                            <!-- Luz convergindo além da retina -->
+                            <line x1="75" y1="65" x2="195" y2="75" stroke="#fa8072" stroke-width="2" stroke-dasharray="4"/>
+                            <line x1="75" y1="85" x2="195" y2="75" stroke="#fa8072" stroke-width="2" stroke-dasharray="4"/>
+                            <!-- Ponto de foco (atrás da retina) -->
+                            <circle cx="195" cy="75" r="5" fill="#ff8c00"/>
+                            <!-- Textos explicativos -->
+                            <text x="175" y="100" class="svg-text" font-size="12" font-weight="bold">Foco atrás</text>
+                            <text x="175" y="115" class="svg-text" font-size="12" font-weight="bold">da retina</text>
+                            <text x="75" y="145" class="svg-text" font-size="14" font-style="italic">Olho Curto</text>
+                        </svg>
+                    </div>
+
+                    <p>Por causa desse formato, os raios de luz que entram no olho não se encontram perfeitamente na retina (a tela no fundo do olho), mas acabam formando o ponto de foco <strong>atrás da retina</strong>.</p>
+                    <div class="highlight-box">
+                        <strong>O resultado prático:</strong> A pessoa pode ter facilidade em enxergar objetos distantes, mas precisa fazer um esforço muscular muito grande no olho para conseguir focar em objetos próximos (como ler um texto, usar o celular ou costurar).
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>Principais Sintomas</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <p>Muitas pessoas têm graus leves e não percebem imediatamente, mas quando o esforço visual aumenta, os sintomas aparecem:</p>
+                    <ul>
+                        <li><strong>Visão embaçada para perto:</strong> Textos e telas ficam difíceis de ler sem afastar o objeto.</li>
+                        <li><strong>Fadiga Ocular (Astenopia):</strong> Sensação de peso, ardência ou olhos vermelhos após leitura prolongada.</li>
+                        <li><strong>Dores de cabeça:</strong> Geralmente localizadas na testa ou ao redor dos olhos, piorando no final do dia.</li>
+                        <li><strong>Aperto nos olhos:</strong> Necessidade de franzir a testa e os olhos para tentar "forçar" o foco.</li>
+                        <li><strong>Dificuldade de concentração:</strong> Crianças podem apresentar falta de atenção na escola por dificuldade de focar nos cadernos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>Miopia vs Hipermetropia</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <p>É muito comum confundir essas duas condições! Veja a diferença de forma simples:</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 400 160" width="100%" height="180px" style="max-width: 500px;">
+                            <!-- MIOPIA (Olho Longo) -->
+                            <g transform="translate(0,0)">
+                                <ellipse cx="100" cy="60" rx="60" ry="40" fill="transparent" class="svg-stroke" stroke-width="2"/>
+                                <path d="M 45 40 Q 30 60 45 80" fill="transparent" class="svg-stroke" stroke-width="2"/>
+                                <!-- Foco antes da retina -->
+                                <line x1="10" y1="20" x2="50" y2="50" stroke="#ff8c00" stroke-width="1.5"/>
+                                <line x1="10" y1="100" x2="50" y2="70" stroke="#ff8c00" stroke-width="1.5"/>
+                                <line x1="50" y1="50" x2="110" y2="60" stroke="#fa8072" stroke-width="2"/>
+                                <line x1="50" y1="70" x2="110" y2="60" stroke="#fa8072" stroke-width="2"/>
+                                <circle cx="110" cy="60" r="4" fill="#ff8c00"/> 
+                                <text x="100" y="130" text-anchor="middle" class="svg-text" font-size="14" font-weight="bold">Miopia</text>
+                                <text x="100" y="145" text-anchor="middle" class="svg-text" font-size="11">Foco ANTES da retina</text>
+                            </g>
+
+                            <!-- Divisória -->
+                            <line x1="200" y1="10" x2="200" y2="150" class="svg-stroke" stroke-dasharray="5" stroke-width="1" opacity="0.3"/>
+
+                            <!-- HIPERMETROPIA (Olho Curto) -->
+                            <g transform="translate(200,0)">
+                                <ellipse cx="90" cy="60" rx="45" ry="40" fill="transparent" class="svg-stroke" stroke-width="2"/>
+                                <path d="M 48 40 Q 33 60 48 80" fill="transparent" class="svg-stroke" stroke-width="2"/>
+                                <!-- Foco depois da retina -->
+                                <line x1="10" y1="20" x2="55" y2="50" stroke="#ff8c00" stroke-width="1.5"/>
+                                <line x1="10" y1="100" x2="55" y2="70" stroke="#ff8c00" stroke-width="1.5"/>
+                                <line x1="55" y1="50" x2="155" y2="60" stroke="#fa8072" stroke-width="2" stroke-dasharray="3"/>
+                                <line x1="55" y1="70" x2="155" y2="60" stroke="#fa8072" stroke-width="2" stroke-dasharray="3"/>
+                                <circle cx="155" cy="60" r="4" fill="#ff8c00"/> 
+                                <text x="90" y="130" text-anchor="middle" class="svg-text" font-size="14" font-weight="bold">Hipermetropia</text>
+                                <text x="90" y="145" text-anchor="middle" class="svg-text" font-size="11">Foco DEPOIS da retina</text>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <ul>
+                        <li><strong>Miopia (Olho Longo):</strong> A luz foca <em>antes</em> da retina. A pessoa vê bem de perto, mas <strong>enxerga embaçado de longe</strong>.</li>
+                        <li><strong>Hipermetropia (Olho Curto):</strong> A luz foca <em>depois</em> da retina. A pessoa vê bem de longe, mas <strong>enxerga embaçado de perto</strong>.</li>
+                    </ul>
+                    <p>Curiosidade: Você não pode ter miopia e hipermetropia no mesmo olho ao mesmo tempo, mas pode desenvolver presbiopia ("vista cansada") junto com a hipermetropia ao envelhecer.</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>Diagnóstico e Exames</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <p>O diagnóstico é feito por um oftalmologista através de exames de rotina indolores:</p>
+                    <ul>
+                        <li><strong>Teste de Acuidade Visual:</strong> Leitura das letras no quadro (Tabela de Snellen) a diferentes distâncias.</li>
+                        <li><strong>Retinoscopia:</strong> O médico projeta uma luz nos olhos para observar o reflexo na retina.</li>
+                        <li><strong>Exame de Refração:</strong> Uso do aparelho "Phoropter" (aquele com várias lentes) para determinar o grau exato que proporciona a melhor visão.</li>
+                        <li><strong>Exame de pupila dilatada:</strong> Especialmente importante em crianças, para relaxar totalmente os músculos do olho e descobrir o grau real "escondido".</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>Opções de Tratamento</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <p>A hipermetropia não é uma doença, é apenas uma característica anatômica do olho. A correção é simples:</p>
+                    
+                    <div class="svg-container">
+                        <svg viewBox="0 0 200 80" width="100%" height="100px" style="max-width: 250px;">
+                            <!-- Hastes -->
+                            <line x1="10" y1="20" x2="30" y2="40" stroke="#ff8c00" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="190" y1="20" x2="170" y2="40" stroke="#ff8c00" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Lente Esquerda -->
+                            <rect x="25" y="30" width="60" height="40" rx="15" fill="rgba(255, 140, 0, 0.1)" stroke="#fa8072" stroke-width="4"/>
+                            <!-- Ponte -->
+                            <path d="M 85 45 Q 100 35 115 45" fill="none" stroke="#fa8072" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Lente Direita -->
+                            <rect x="115" y="30" width="60" height="40" rx="15" fill="rgba(255, 140, 0, 0.1)" stroke="#fa8072" stroke-width="4"/>
+                            <!-- Reflexo brilhante (indicando lente) -->
+                            <path d="M 35 40 Q 55 40 55 60" fill="none" stroke="#ff8c00" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                            <path d="M 125 40 Q 145 40 145 60" fill="none" stroke="#ff8c00" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                            <text x="100" y="80" text-anchor="middle" class="svg-text" font-size="12" font-weight="bold">Lentes Convergentes (+)</text>
+                        </svg>
+                    </div>
+
+                    <ul>
+                        <li><strong>Óculos de Grau:</strong> Utilizam lentes convergentes ou convexas (grau positivo, ex: +2.00). Elas "puxam" o foco da luz para frente, posicionando-o exatamente sobre a retina.</li>
+                        <li><strong>Lentes de Contato:</strong> Oferecem a mesma correção que os óculos, com a vantagem de não alterar o campo de visão periférico e serem ótimas para esportes.</li>
+                        <li><strong>Cirurgia Refrativa (LASIK / PRK):</strong> Para adultos com grau estabilizado, um laser remodela o formato da córnea de forma permanente, eliminando ou reduzindo a necessidade de óculos.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h2>Mitos e Verdades Fascinantes</h2>
+                    <span class="icon-indicator">+</span>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><strong>"Forçar a vista" piora o grau:</strong> <em>Mito!</em> Forçar a vista causa dor de cabeça e cansaço, mas não altera o formato do seu olho nem faz o grau aumentar.</li>
+                        <li><strong>Todo bebê nasce hipermétrope:</strong> <em>Verdade!</em> Como os bebês são pequenos, seus olhos também são curtos. À medida que a criança cresce, o olho alonga e o grau geralmente zera (processo chamado de emetropização).</li>
+                        <li><strong>Cenoura cura hipermetropia:</strong> <em>Mito!</em> Vitamina A é excelente para a saúde da retina, mas não altera a anatomia do olho para curar graus de refração.</li>
+                        <li><strong>O "Falso Foco" dos Jovens:</strong> <em>Verdade!</em> Crianças e jovens têm o cristalino (a lente interna do olho) tão flexível que ele consegue "acomodar" e focar a luz à força, compensando a hipermetropia. Por isso muitos jovens enxergam perfeitamente mesmo tendo grau, mas sofrem com intensas dores de cabeça.</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="simulation-section">
+            <h2>Simulação Visual 👁️</h2>
+            <p>Clique no botão para ligar/desligar o efeito e entender como é a visão de perto não corrigida.</p>
+            
+            <input type="checkbox" id="sim-toggle">
+            <label for="sim-toggle" class="sim-btn">Alternar Visão 🔄</label>
+            <p class="sim-status">Status:</p>
+
+            <div class="sim-view">
+                <div class="object far-object">
+                    🏕️ ☀️
+                </div>
+                
+                <div class="object close-object">
+                    <h3>Página de Leitura</h3>
+                    <p>Quando a hipermetropia está ativada, os objetos em primeiro plano ficam completamente desfocados. A luz está formando imagem atrás da retina neste exato momento!</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Criado com Modo Claro/Escuro e detalhes em degradê Salmão/Laranja. Clique nos títulos para explorar as seções.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Lógica do Acordeão (Abrir/Fechar abas)
+        function toggleCard(headerElement) {
+            const card = headerElement.parentElement;
+            const body = card.querySelector('.card-body');
+            
+            // Verifica se o card clicado já está aberto
+            const isActive = card.classList.contains('active');
+            
+            // (Opcional) Fechar todos os outros cards abertos
+            const allCards = document.querySelectorAll('.card');
+            allCards.forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.card-body').style.maxHeight = null;
+            });
+
+            // Se não estava ativo, abre ele
+            if (!isActive) {
+                card.classList.add('active');
+                // Calcula a altura exata do conteúdo para fazer a animação suave
+                body.style.maxHeight = body.scrollHeight + 50 + "px"; 
+            }
+        }
+
+        // Lógica do Modo Escuro / Claro
+        const themeBtn = document.getElementById('themeBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        // Verifica preferência salva do usuário
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+            themeBtn.innerHTML = '<span id="themeIcon">☀️</span> Claro';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeBtn.innerHTML = '<span id="themeIcon">☀️</span> Claro';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeBtn.innerHTML = '<span id="themeIcon">🌙</span> Escuro';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
